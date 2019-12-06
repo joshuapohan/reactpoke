@@ -2,10 +2,10 @@ import { combineReducers } from 'redux';
 
 import PokeListReducer from './PokeListReducer';
 import PokeDetailReducer from './PokeDetailReducer';
-import CacheIndexReducer from './CacheIndexReducer';
+import PokeCacheReducer from './PokeCacheReducer';
 
 export default combineReducers({
     pokes: PokeListReducer,
-    cacheIndex: CacheIndexReducer,
+    pokeCache: PokeCacheReducer,
     detail: PokeDetailReducer
 });

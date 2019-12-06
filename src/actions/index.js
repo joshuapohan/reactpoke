@@ -16,7 +16,7 @@ import {
 
 export const fetchPokemonList = (page) => async (dispatch, getState) => {
 
-    let cachedIndex = getState().cacheIndex.cachedIndex;
+    let cachedIndex = getState().pokeCache.cachedIndex;
     
     // Check first if page is already cached, if so then don't make another request
     if(cachedIndex.includes(page)){
@@ -24,7 +24,7 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
         if( startIndex > 0 ){
             startIndex = page * cItemsPerPage;
         }
-        let displayedList = getState().cacheIndex.cachedList.slice(startIndex, startIndex + (cItemsPerPage - 1));
+        let displayedList = getState().pokeCache.cachedList.slice(startIndex, startIndex + (cItemsPerPage - 1));
         dispatch({
             type:FETCH_CACHED_POKEMONS,
             payload: displayedList,
@@ -54,7 +54,7 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
 }
 
 export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
-    let cachedList = getState().cacheIndex.cachedList;
+    let cachedList = getState().pokeCache.cachedList;
     let currentPokemon = null;
 
     try{

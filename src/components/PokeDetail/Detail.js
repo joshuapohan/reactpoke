@@ -30,7 +30,6 @@ class Details extends React.Component{
 const mapStateToProps = state => {
     return {
         pokemonDetail: state.detail,
-        cachedList: state.cacheIndex.cachedList
     }
 };
 

@@ -6,7 +6,7 @@ import {
     FETCH_POKEMON,
     ADD_STORAGE,
     REMOVE_STORAGE
-} from './../actions/types';
+} from '../actions/types';
 
 let defaultState = {
     curIndex: 0,
