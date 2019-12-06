@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'; 
+import { Link } from 'react-router-dom';
 
 import { fetchPokemonList } from '../../actions';
 
@@ -20,10 +21,12 @@ class List extends React.Component{
                     <h1>Pokemon List</h1>
                     {
                         Object.keys(this.props.pokes).map((key)=>{
+                            let currentPoke = this.props.pokes[key];
                             return(
                                 <div key={key}>
-                                    <img src={this.props.pokes[key].sprite}/>
-                                    <h2>{this.props.pokes[key].name}</h2>
+                                    <img src={currentPoke.sprite}/>
+                                    <h2>{currentPoke.name}</h2>
+                                    <Link to={"detail/" + currentPoke.id}>View</Link>
                                 </div>
                             )
                         })
