@@ -3,13 +3,15 @@ import {
     FETCH_CACHED_POKEMONS,
     FETCH_UNCACHED_POKEMONS,
     ADD_STORAGE,
-    REMOVE_STORAGE
+    REMOVE_STORAGE,
+    FETCH_POKEMON_DETAIL
 } from './types';
 
 import {
     cItemsPerPage,
     cPokeAPIMainURL,
-    cSpriteURL
+    cSpriteURL,
+    cPokeAPIDetailURL
 } from '../config';
 
 export const fetchPokemonList = (page) => async (dispatch, getState) => {
@@ -23,7 +25,10 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
             startIndex = page * cItemsPerPage;
         }
         let displayedList = getState().cacheIndex.cachedList.slice(startIndex, startIndex + (cItemsPerPage - 1));
-        dispatch({type:FETCH_CACHED_POKEMONS, payload: displayedList, curIndex: page});
+        dispatch({
+            type:FETCH_CACHED_POKEMONS,
+            payload: displayedList,
+            curIndex: page});
     } else {
         try{
             let offset = page * cItemsPerPage;
@@ -34,9 +39,10 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
                 let match = idPattern.exec(pokemon["url"]);
                 pokemon["id"] = match[1];
                 pokemon["sprite"] = cSpriteURL + match[1] + ".png";
+                pokemon["isDetailCached"] = false;
             })
             dispatch({
-                type:FETCH_UNCACHED_POKEMONS,
+                type: FETCH_UNCACHED_POKEMONS,
                 payload: pokeList.results,
                 curIndex: page
             });
@@ -44,5 +50,38 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
         catch(e){
             console.log(e);
         }    
+    }
+}
+
+export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
+    let cachedList = getState().cacheIndex.cachedList;
+    let currentPokemon = null;
+
+    try{
+        for(let i = 0; i < cachedList.length; i++){
+            let pokemon = cachedList[i];
+            if(pokemon["id"] == id){
+                currentPokemon = pokemon;
+                break;
+            }
+        }
+        if(currentPokemon != null){
+            if(currentPokemon["IsDetailCached"]){
+                // already cached 
+            } else{
+                const response = await fetch( cPokeAPIDetailURL + id.toString(10));
+                let pokeDetail = await response.json();
+                currentPokemon["moves"] = pokeDetail.moves;
+                currentPokemon["types"] = pokeDetail.types;
+                currentPokemon["IsDetailCached"] = true;
+            }    
+        }
+        dispatch({
+            type: FETCH_POKEMON_DETAIL,
+            payload: currentPokemon
+        });
+    }
+    catch(e){
+        console.log(e)
     }
 }

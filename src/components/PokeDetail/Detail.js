@@ -1,25 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { fetchPokemonDetail } from '../../actions';
+
 class Details extends React.Component{
     
     componentDidMount(){
         const { match: { params } } = this.props;
-        let pokeId = params.id;
+        this.props.fetchPokemonDetail(params.id)
     }
 
     render(){
-        return(
-            <h1>Details</h1>
-        );
-
+        if(this.props.pokemonDetail){
+            let pokemon = this.props.pokemonDetail
+            return(
+                <div>
+                    <img src={pokemon.sprite}/>
+                    <h2>{pokemon.name}</h2>
+                </div>
+            );
+        } else {
+            return(
+                <h1>Loading</h1>
+            );    
+        }
     }
 }
 
 const mapStateToProps = state => {
     return {
+        pokemonDetail: state.detail,
         cachedList: state.cacheIndex.cachedList
     }
 };
 
-export default connect(mapStateToProps, undefined)(Details);
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchPokemonDetail: id => dispatch(fetchPokemonDetail(id))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Details);
