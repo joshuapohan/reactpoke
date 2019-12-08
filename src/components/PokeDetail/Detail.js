@@ -1,9 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { fetchPokemonDetail } from '../../actions';
+import { 
+    fetchPokemonDetail,
+    capturePokemon
+} from '../../actions';
 
 class Details extends React.Component{
+
+    tryCapturePokemon = () => {
+        let nickname = window.prompt("Enter nickname","pokeymanz");
+        this.props.capturePokemon(this.props.pokemonDetail.id, nickname, this.props.pokemonDetail);
+    }
     
     componentDidMount(){
         const { match: { params } } = this.props;
@@ -17,6 +25,7 @@ class Details extends React.Component{
                 <div>
                     <img src={pokemon.sprite}/>
                     <h2>{pokemon.name}</h2>
+                    <button onClick={this.tryCapturePokemon}>Catch</button>
                 </div>
             );
         } else {
@@ -35,7 +44,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchPokemonDetail: id => dispatch(fetchPokemonDetail(id))
+        fetchPokemonDetail: id => dispatch(fetchPokemonDetail(id)),
+        capturePokemon: (id, nickname, detail) => dispatch(capturePokemon(id, nickname, detail))
     }
 }
 

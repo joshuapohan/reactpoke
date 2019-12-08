@@ -1,10 +1,9 @@
 import {
-    FETCH_POKEMONS,
     FETCH_CACHED_POKEMONS,
     FETCH_UNCACHED_POKEMONS,
-    ADD_STORAGE,
-    REMOVE_STORAGE,
-    FETCH_POKEMON_DETAIL
+    FETCH_POKEMON_DETAIL,
+    CATCH_POKEMON,
+    RELEASE_POKEMON
 } from './types';
 
 import {
@@ -84,4 +83,20 @@ export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
     catch(e){
         console.log(e)
     }
+}
+
+export const capturePokemon = (id, nickname, detail) => {
+    return {
+        type: CATCH_POKEMON,
+        id,
+        nickname,
+        detail    
+    };
+}
+
+export const releasePokemon = index => {
+    return {
+        type: RELEASE_POKEMON,
+        index
+    };
 }
