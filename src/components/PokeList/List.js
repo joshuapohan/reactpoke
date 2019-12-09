@@ -27,8 +27,8 @@ class List extends React.Component{
                                 let currentPoke = this.props.pokes[key];
                                 return(
                                     <div className="card" style={{"textAlign":"center"}} key={key}>
-                                        <div className="image">
-                                            <img src={currentPoke.sprite}/>
+                                        <div className="image pokeball-bg">
+                                            <img className="poke" src={currentPoke.sprite}/>
                                         </div>
                                         <div className="header">
                                             <h2>{currentPoke.name}</h2>

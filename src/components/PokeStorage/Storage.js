@@ -1,31 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { releasePokemon } from '../../actions';
 
 class Storage extends React.Component{
     render(){
         if(this.props.storage != null){
             return(
-                <div className="ui grid container">
-                    <h1 className="page-title" >Pokemon List</h1>
-                    <div className="ui six doubling cards">
-                        {
-                            this.props.storage.map((poke)=>{
-                                return(
-                                    <div className="card" style={{"textAlign":"center"}} key={poke.id}>
-                                        <div className="image">
-                                            <img src={poke.detail.sprite}/>
-                                        </div>
+                <div className="ui massive celled list">
+                    {
+                        this.props.storage.map((currentPoke, index)=>{
+                            return(
+                                <div className="item" style={{"textAlign":"center"}} key={currentPoke.id}>
+                                    <img className="ui avatar image" src={currentPoke.detail.sprite}/>
+                                    <div className="content">
                                         <div className="header">
-                                            <h2>{poke.nickname}</h2>
+                                            {currentPoke.nickname}
                                         </div>
-                                        <div className="meta">
-                                            <h2>{poke.detail.name}</h2>
+                                            {currentPoke.detail.name}
+                                    </div>
+                                    <div className="right floated content">
+                                        <div className="ui button">
+                                            <Link to={"detail/" + currentPoke.id}>View</Link>                                           
                                         </div>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
+                                    <div className="right floated content">
+                                        <div className="ui button" onClick={()=>this.props.releasePokemon(index)}>Release</div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             );
         } else{
@@ -42,4 +48,10 @@ const mapStateToProps = state => {
     };
 }
 
-export default connect(mapStateToProps, undefined)(Storage);
+const mapDispatchToProps = dispatch => {
+    return {
+        releasePokemon: index => dispatch(releasePokemon(index))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Storage);

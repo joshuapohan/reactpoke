@@ -8,7 +8,6 @@ class Header extends React.Component{
         return(
             <div className="ui secondary pointing menu">
                 <Link to="/" className="item">Home</Link>
-                <Link to="/detail" className="item">Detail</Link>
                 <Link to="/storage" className="item">Storage</Link>
             </div>
         );

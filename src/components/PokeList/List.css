@@ -2,3 +2,20 @@
     display: block;
     width: 100%;
 }
+
+img.poke:hover{
+    animation: bounce 0.5s infinite alternate;
+}
+
+img.poke:focus{
+    animation: bounce 0.5s infinite alternate;
+}
+
+.pokeball-bg{
+    background-color: #c72c41 !important;
+}
+
+@keyframes bounce{
+    0% { transform: translateY(0);}
+    100% { transform: translateY(-10px);}
+}

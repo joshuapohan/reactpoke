@@ -26,6 +26,22 @@ class Details extends React.Component{
                     <img src={pokemon.sprite}/>
                     <h2>{pokemon.name}</h2>
                     <button onClick={this.tryCapturePokemon}>Catch</button>
+                    <ul>
+                        {Object.keys(this.props.pokemonDetail.types).map(key => {
+                            let curType = this.props.pokemonDetail.types[key];
+                            return(
+                                <li>{curType.type.name}</li>
+                            )
+                        })}
+                    </ul>
+                    <ul>
+                        {Object.keys(this.props.pokemonDetail.moves).map(key => {
+                            let curMove = this.props.pokemonDetail.moves[key];
+                            return(
+                                <li>{curMove.move.name}</li>
+                            )
+                        })}
+                    </ul>
                 </div>
             );
         } else {

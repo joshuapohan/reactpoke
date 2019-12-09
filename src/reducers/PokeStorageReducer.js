@@ -9,7 +9,9 @@ export default (state=[], action) => {
         case CATCH_POKEMON:
             return [...state, {id: action.id, nickname: action.nickname, detail: action.detail}];
         case RELEASE_POKEMON:
-            return  state.splice(action.index, 1);
+            let newSlice = [...state];
+            newSlice.splice(action.index, 1);
+            return  newSlice;
         default:
             return state;
     }
