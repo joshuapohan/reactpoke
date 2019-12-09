@@ -20,12 +20,8 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
     let normalizedPage = page % (cMaxPage + 1);
 
     // Check first if page is already cached, if so then don't make another request
-    if(cachedIndex.includes(page)){
-        let startIndex = normalizedPage; // starting index of pokemon to fetch based on page
-        if( startIndex > 0 ){
-            startIndex = normalizedPage * cItemsPerPage;
-        }
-        let displayedList = getState().pokeCache.cachedList.slice(startIndex, startIndex + cItemsPerPage);
+    if(cachedIndex.includes(normalizedPage)){
+        let displayedList = getState().pokeCache.cachedList[parseInt(normalizedPage)];
         dispatch({
             type:FETCH_CACHED_POKEMONS,
             payload: displayedList,
@@ -57,10 +53,35 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
 export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
     let cachedList = getState().pokeCache.cachedList;
     let currentPokemon = null;
+    let page = Math.floor(id / (cItemsPerPage));
 
+    // Check first if pokemon page already fetched, works until id is skipped
+    if(!cachedList[page]){
+        try{
+            let offset = page === 0 ? 0 :(page * cItemsPerPage) - 1;
+            const response = await fetch( cPokeAPIMainURL + offset.toString(10));
+            let pokeList = await response.json();
+            pokeList.results.forEach((pokemon)=>{
+                let idPattern = /api\/v2\/pokemon\/(\d+)\//g
+                let match = idPattern.exec(pokemon["url"]);
+                pokemon["id"] = match[1];
+                pokemon["sprite"] = cSpriteURL + match[1] + ".png";
+                pokemon["isDetailCached"] = false;
+            })
+            dispatch({
+                type: FETCH_UNCACHED_POKEMONS,
+                payload: pokeList.results,
+                curIndex: page
+            });
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+    cachedList = getState().pokeCache.cachedList;
     try{
-        for(let i = 0; i < cachedList.length; i++){
-            let pokemon = cachedList[i];
+        for(let i = 0; i < cachedList[page].length; i++){
+            let pokemon = cachedList[page][i];
             if(pokemon["id"] === id){
                 currentPokemon = pokemon;
                 break;
@@ -77,6 +98,7 @@ export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
                 currentPokemon["IsDetailCached"] = true;
             }    
         }
+        
         dispatch({
             type: FETCH_POKEMON_DETAIL,
             payload: currentPokemon

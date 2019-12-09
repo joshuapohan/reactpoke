@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { 
+import {
     fetchPokemonDetail,
     capturePokemon
 } from '../../actions';
@@ -34,6 +34,7 @@ class Details extends React.Component{
     
     componentDidMount(){
         const { match: { params } } = this.props;
+
         this.props.fetchPokemonDetail(params.id)
     }
 

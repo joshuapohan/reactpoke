@@ -7,13 +7,17 @@ let defaultState = {
     curIndex: 0,
     maxIndex: 9999,
     cachedIndex: [],
-    cachedList: []
+    cachedList: {}
 }
 
 export default (state=defaultState, action) => {
     switch(action.type){
         case FETCH_UNCACHED_POKEMONS:
-            return {...state, curIndex: action.curIndex, cachedIndex: [...state.cachedIndex, action.curIndex], cachedList:[...state.cachedList, ...action.payload]}
+            let index = action.curIndex;
+            let curPageList = action.payload;
+            let newCachedList = {...state.cachedList};
+            newCachedList[index] = curPageList;
+            return {...state, curIndex: action.curIndex, cachedIndex: [...state.cachedIndex, action.curIndex], cachedList:newCachedList}
         case FETCH_CACHED_POKEMONS:
             return {...state, curIndex: action.curIndex}
         default:
