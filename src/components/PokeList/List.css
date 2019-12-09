@@ -19,3 +19,9 @@ img.poke:focus{
     0% { transform: translateY(0);}
     100% { transform: translateY(-10px);}
 }
+
+.page-input{
+    margin-left: auto;
+    width: 50px;
+    text-align: center;
+}

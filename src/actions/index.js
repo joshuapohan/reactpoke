@@ -23,7 +23,7 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
         if( startIndex > 0 ){
             startIndex = page * cItemsPerPage;
         }
-        let displayedList = getState().pokeCache.cachedList.slice(startIndex, startIndex + (cItemsPerPage - 1));
+        let displayedList = getState().pokeCache.cachedList.slice(startIndex, startIndex + cItemsPerPage);
         dispatch({
             type:FETCH_CACHED_POKEMONS,
             payload: displayedList,
