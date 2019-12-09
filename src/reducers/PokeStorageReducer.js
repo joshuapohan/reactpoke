@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {
     CATCH_POKEMON,
     RELEASE_POKEMON

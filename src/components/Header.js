@@ -7,8 +7,11 @@ class Header extends React.Component{
     render(){
         return(
             <div className="ui secondary pointing menu">
-                <Link to="/" className="item">Home</Link>
-                <Link to="/storage" className="item">Storage</Link>
+                <div className="header item white-text">
+                    PokeReact
+                </div>
+                <Link to="/" className="item white-text">Pokemon List</Link>
+                <Link to="/storage" className="item white-text">My Pokemon List</Link>
             </div>
         );
     }

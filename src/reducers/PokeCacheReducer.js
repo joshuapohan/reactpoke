@@ -1,11 +1,6 @@
-import _ from 'lodash';
 import {
-    FETCH_POKEMONS,
     FETCH_CACHED_POKEMONS,
     FETCH_UNCACHED_POKEMONS,
-    FETCH_POKEMON,
-    ADD_STORAGE,
-    REMOVE_STORAGE
 } from '../actions/types';
 
 let defaultState = {

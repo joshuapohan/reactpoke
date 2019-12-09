@@ -11,16 +11,39 @@ class List extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            targetPage: 0
+            targetPage: this.props.curPage
         };
     }
 
+
+    getNbOfCaptured = (id) => {
+        let count = 0;
+        this.props.storage.forEach(currentPoke => {
+            if(currentPoke.id === id){
+                count++;
+            }
+        });
+        return count;
+    }
+
     goToTargetPage = () => {
-        let targetPage = parseInt(document.querySelector("#pageNb").value);
-        if(targetPage.length === 0){
-            targetPage = 0;
-        }
-        this.props.loadPage(targetPage);
+        this.props.loadPage(this.state.targetPage);
+    }
+
+    goToNextPage = () => {
+        this.setState( prevState  => {
+            return {
+                targetPage: parseInt(prevState.targetPage) + 1
+            }
+        }, this.goToTargetPage);
+    }
+
+    goToPreviousPage = () => {
+        this.setState( prevState  => {
+            return {
+                targetPage: parseInt(prevState.targetPage) - 1
+            }
+        }, this.goToTargetPage);     
     }
 
     componentDidMount = () => {
@@ -29,11 +52,9 @@ class List extends React.Component{
     }
 
     onPageInputChange = (e) => {
-        if(e.target.value.length > 0){
-            this.setState({
-                targetPage: parseInt(e.target.value)
-            })                
-        }
+        this.setState({
+            targetPage: e.target.value
+        })   
     }
 
     render(){
@@ -46,6 +67,7 @@ class List extends React.Component{
                             {
                                 Object.keys(this.props.pokes).map((key)=>{
                                     let currentPoke = this.props.pokes[key];
+                                    let capturedNb = this.getNbOfCaptured(currentPoke.id);
                                     return(
                                         <div className="card" style={{"textAlign":"center"}} key={key}>
                                             <div className="image pokeball-bg">
@@ -53,6 +75,9 @@ class List extends React.Component{
                                             </div>
                                             <div className="header">
                                                 <h2>{currentPoke.name}</h2>
+                                            </div>
+                                            <div className="content">
+                                                { capturedNb > 0 ? "Captured : " + capturedNb : "Not captured"}    
                                             </div>
                                             <div className="meta">
                                                 <Link to={"detail/" + currentPoke.id}>View</Link>
@@ -66,9 +91,8 @@ class List extends React.Component{
                     <div className="ui grid container">
                         <div className="row">
                             <div className="seven wide computer five wide tablet five wide mobile column">
-                                <button className={ this.props.curPage > 0?"ui right floated  icon button":"ui right floated icon button disabled"} onClick={()=>this.props.loadPage(this.props.curPage - 1)}>
-                                    <i className="left arrow icon"></i>
-                                       
+                                <button className={ this.props.curPage > 0?"ui right floated  icon button":"ui right floated icon button disabled"} onClick={this.goToPreviousPage}>
+                                    <i className="left arrow icon"></i>                                       
                                 </button>
                             </div>
                             <div className="two wide computer six wide tablet six wide mobile column">
@@ -78,7 +102,7 @@ class List extends React.Component{
                                 </div>
                             </div>
                             <div className="seven wide computer five wide tablet five wide mobile column">
-                                <button className={ this.props.curPage <= cMaxPage ? "ui left floated  icon button":"ui left floated icon button disabled"} onClick={()=>this.props.loadPage(this.props.curPage + 1)}>
+                                <button className={ this.props.curPage <= cMaxPage ? "ui left floated  icon button":"ui left floated icon button disabled"} onClick={this.goToNextPage}>
                                  
                                     <i className="right arrow icon"></i>                                        
                                 </button>
@@ -96,7 +120,11 @@ class List extends React.Component{
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return {pokes: state.pokes, curPage: state.pokeCache.curIndex}
+    return {
+        pokes: state.pokes,
+        curPage: state.pokeCache.curIndex,
+        storage: state.storage
+    }
 }
 
 const mapDispatchToProps = dispatch => {

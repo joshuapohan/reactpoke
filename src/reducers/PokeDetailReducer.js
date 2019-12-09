@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {
     FETCH_POKEMON_DETAIL
 } from './../actions/types';

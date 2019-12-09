@@ -10,7 +10,8 @@ class Storage extends React.Component{
     render(){
         if(this.props.storage != null){
             return(
-                <div className="ui grid container">
+                <div className="ui grid container">        
+                    <h1 className="page-title">My Pokemon List</h1>
                     <div className="row">
                         <div className="five wide computer two wide tablet two wide mobile column">
                         </div>

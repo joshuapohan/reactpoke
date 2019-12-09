@@ -8,6 +8,7 @@ import {
 
 import {
     cItemsPerPage,
+    cMaxPage,
     cPokeAPIMainURL,
     cSpriteURL,
     cPokeAPIDetailURL
@@ -16,21 +17,22 @@ import {
 export const fetchPokemonList = (page) => async (dispatch, getState) => {
 
     let cachedIndex = getState().pokeCache.cachedIndex;
-    
+    let normalizedPage = page % (cMaxPage + 1);
+
     // Check first if page is already cached, if so then don't make another request
     if(cachedIndex.includes(page)){
-        let startIndex = page; // starting index of pokemon to fetch based on page
+        let startIndex = normalizedPage; // starting index of pokemon to fetch based on page
         if( startIndex > 0 ){
-            startIndex = page * cItemsPerPage;
+            startIndex = normalizedPage * cItemsPerPage;
         }
         let displayedList = getState().pokeCache.cachedList.slice(startIndex, startIndex + cItemsPerPage);
         dispatch({
             type:FETCH_CACHED_POKEMONS,
             payload: displayedList,
-            curIndex: page});
+            curIndex: normalizedPage});
     } else {
         try{
-            let offset = page * cItemsPerPage;
+            let offset = normalizedPage * cItemsPerPage;
             const response = await fetch( cPokeAPIMainURL + offset.toString(10));
             let pokeList = await response.json();
             pokeList.results.forEach((pokemon)=>{
@@ -43,7 +45,7 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
             dispatch({
                 type: FETCH_UNCACHED_POKEMONS,
                 payload: pokeList.results,
-                curIndex: page
+                curIndex: normalizedPage
             });
         }
         catch(e){
@@ -59,7 +61,7 @@ export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
     try{
         for(let i = 0; i < cachedList.length; i++){
             let pokemon = cachedList[i];
-            if(pokemon["id"] == id){
+            if(pokemon["id"] === id){
                 currentPokemon = pokemon;
                 break;
             }
