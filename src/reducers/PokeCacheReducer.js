@@ -6,8 +6,7 @@ import {
 let defaultState = {
     curIndex: 0,
     maxIndex: 9999,
-    cachedIndex: [],
-    cachedList: {}
+    cachedPages: {}
 }
 
 export default (state=defaultState, action) => {
@@ -15,9 +14,9 @@ export default (state=defaultState, action) => {
         case FETCH_UNCACHED_POKEMONS:
             let index = action.curIndex;
             let curPageList = action.payload;
-            let newCachedList = {...state.cachedList};
-            newCachedList[index] = curPageList;
-            return {...state, curIndex: action.curIndex, cachedIndex: [...state.cachedIndex, action.curIndex], cachedList:newCachedList}
+            let newCachedPages = {...state.cachedPages};
+            newCachedPages[index] = curPageList;
+            return {...state, curIndex: action.curIndex, cachedPages:newCachedPages}
         case FETCH_CACHED_POKEMONS:
             return {...state, curIndex: action.curIndex}
         default:

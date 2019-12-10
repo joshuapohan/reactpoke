@@ -16,12 +16,12 @@ import {
 
 export const fetchPokemonList = (page) => async (dispatch, getState) => {
 
-    let cachedIndex = getState().pokeCache.cachedIndex;
+    let cachedPages = getState().pokeCache.cachedPages;
     let normalizedPage = page % (cMaxPage + 1);
 
     // Check first if page is already cached, if so then don't make another request
-    if(cachedIndex.includes(normalizedPage)){
-        let displayedList = getState().pokeCache.cachedList[parseInt(normalizedPage)];
+    if(cachedPages[normalizedPage]){
+        let displayedList = cachedPages[parseInt(normalizedPage)];
         dispatch({
             type:FETCH_CACHED_POKEMONS,
             payload: displayedList,
@@ -51,12 +51,12 @@ export const fetchPokemonList = (page) => async (dispatch, getState) => {
 }
 
 export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
-    let cachedList = getState().pokeCache.cachedList;
+    let cachedPages = getState().pokeCache.cachedPages;
     let currentPokemon = null;
     let page = Math.floor(id / (cItemsPerPage));
 
-    // Check first if pokemon page already fetched, works until id is skipped
-    if(!cachedList[page]){
+    // Check first if pokemon page already fetched
+    if(!cachedPages[page]){
         try{
             let offset = page === 0 ? 0 :(page * cItemsPerPage) - 1;
             const response = await fetch( cPokeAPIMainURL + offset.toString(10));
@@ -78,10 +78,10 @@ export const fetchPokemonDetail = (id) => async (dispatch, getState) => {
             console.log(e);
         }
     }
-    cachedList = getState().pokeCache.cachedList;
+    cachedPages = getState().pokeCache.cachedPages;
     try{
-        for(let i = 0; i < cachedList[page].length; i++){
-            let pokemon = cachedList[page][i];
+        for(let i = 0; i < cachedPages[page].length; i++){
+            let pokemon = cachedPages[page][i];
             if(pokemon["id"] === id){
                 currentPokemon = pokemon;
                 break;
